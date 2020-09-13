@@ -1,0 +1,552 @@
+#include <iostream>
+using namespace std;
+double Base();
+double Time(double BaseScore, double AV_d, double AC_d, double PR_d, double UI_d, double S_d, double C_d, double I_d, double A_d);
+double Contes(double AV_d, double AC_d, double PR_d, double UI_d, double S_d, double C_d, double I_d, double A_d, double E_d, double RL_d, double RC_d);
+int main()
+{
+	setlocale(LC_ALL, "rus");
+	int key;
+	cout << "Расчет BaseScore:\n";
+	Base();
+	system("pause");
+	return 0;
+}
+double Base()
+{
+	char AV, AC, PR, UI, S, C, I, A;
+	double AV_d, AC_d, PR_d, UI_d, S_d, C_d, I_d, A_d,Impact,Exploitability,BaseScore,ImpactBase;
+	cout << "Введите буквенные коды значений через пробел в данном порядке:[AV AC PR UI S C I A]\nВвод:";
+	cin >> AV >> AC >> PR >> UI >> S >> C >> I >> A;
+	switch (AV)
+	{
+	case 'N':
+		AV_d = 0.85;
+		break;
+	case 'A':
+		AV_d = 0.62;
+		break;
+	case 'L':
+		AV_d = 0.55;
+		break;
+	case 'P':
+		AV_d = 0.2;
+		break;
+	}
+	switch (AC)
+	{
+	case 'L':
+		AC_d = 0.77;
+		break;
+	case 'H':
+		AC_d = 0.44;
+		break;
+	}
+	switch (PR)
+	{
+	case 'N':
+		PR_d = 0.85;
+		break;
+	case 'L':
+		if (S == 'C')
+		{
+			PR_d = 0.68;
+		}
+		else
+		{
+			PR_d = 0.62;
+		}
+		break;
+	case 'H':
+		if (S == 'C')
+		{
+			PR_d = 0.50;
+		}
+		else
+		{
+			PR_d = 0.27;
+		}
+		break;
+	}
+	switch (UI)
+	{
+	case 'N':
+		UI_d = 0.85;
+		break;
+	case 'R':
+		UI_d = 0.62;
+		break;
+	}
+	switch (S)
+	{
+	case 'U':
+		S_d = 0;
+		break;
+	case 'C':
+		S_d = 1;
+		break;
+	}
+	switch (C)
+	{
+	case 'N':
+		C_d = 0.0;
+		break;
+	case 'L':
+		C_d = 0.22;
+		break;
+	case 'H':
+		C_d = 0.56;
+		break;
+	}
+	switch (I)
+	{
+	case 'N':
+		I_d = 0.0;
+		break;
+	case 'L':
+		I_d = 0.22;
+		break;
+	case 'H':
+		I_d = 0.56;
+		break;
+	}
+	switch (A)
+	{
+	case 'N':
+		A_d = 0.0;
+		break;
+	case 'L':
+		A_d = 0.22;
+		break;
+	case 'H':
+		A_d = 0.56;
+		break;
+	}
+	cout << "AV= " << AV << " " << AV_d << "\nAC= " << AC << " " << AC_d << "\nPR= " << PR << " " << PR_d << "\nUI= " << UI << " " << UI_d << "\nS= " << S << " " << S_d << "\nC= " << C << " " << C_d << "\nI= " << I << " " << I_d << "\nA= " << A << " " << A_d << endl;
+	Exploitability = 8.22 * AV_d * AC_d * PR_d * UI;
+	ImpactBase = 1 - ((1 - C_d) * (1 - I_d) * (1 - A_d));
+	if (S_d == 0)
+	{
+		Impact = 6.42 * ImpactBase;
+	}
+	else
+	{
+		Impact = 7.52 * (ImpactBase-0.029)-3.25*pow((ImpactBase-0.02),15);
+	}
+	if (Impact <= 0)
+	{
+		BaseScore = 0;
+	}
+	else
+	{
+		if (S_d == 0)
+		{
+			if ((Impact + Exploitability) < 10)
+			{
+				BaseScore = ceil((Impact + Exploitability) * 10) / 10;
+			}
+			else
+			{
+				BaseScore = 10;
+			}
+		}
+		else
+		{
+			if (((Impact + Exploitability) * 1.08) < 10)
+			{
+				BaseScore = ceil(((Impact + Exploitability) * 1.08) * 10) / 10;
+			}
+			else
+			{
+				BaseScore = 10;
+			}
+		}
+	}
+	cout << "\nBaseScore= " << BaseScore<<endl;
+	cout << "\nQualityScore= " << BaseScore << endl;
+	if (BaseScore == 0)
+	{
+		cout << "\nИнформационный уровень опасности(опасность отсутствует).";
+	}
+	else
+	{
+		if ((BaseScore >= 0.1) && (BaseScore <= 3.9))
+		{
+			cout << "\nНизкий уровень опасности.";
+		}
+		else
+		{
+			if ((BaseScore >= 4.0) && (BaseScore <= 6.9))
+			{
+				cout << "\nСредний уровень опасности.";
+			}
+			else
+			{
+				if ((BaseScore >= 7.0) && (BaseScore <= 8.9))
+				{
+					cout << "\nВысокий уровень опаности.";
+				}
+				else
+				{
+					cout << "\nКритический уровень опасности.";
+				}
+			}
+		}
+	}
+	Time(BaseScore,AV_d,AC_d,PR_d,UI_d,S_d, C_d, I_d, A_d);
+	return 0;
+}
+double Time(double BaseScore, double AV_d, double AC_d, double PR_d, double UI_d, double S_d, double C_d, double I_d, double A_d)
+{
+	char E, RL, RC;
+	double E_d, RL_d, RC_d,TemporalScore;
+	cout << "\n\n\nРасчет временных метрик:\nВведите буквенные коды значений через пробел в данном порядке:[E RL RC]\nВвод:";
+	cin >> E >> RL >> RC;
+	switch (E)
+	{
+	case 'X':
+		E_d = 1.0;
+		break;
+	case 'U':
+		E_d = 0.91;
+		break;
+	case 'P':
+		E_d = 0.94;
+		break;
+	case 'F':
+		E_d = 0.97;
+		break;
+	case 'H':
+		E_d = 1.0;
+		break;
+	}
+	switch (RL)
+	{
+	case 'X':
+		RL_d = 1.0;
+		break;
+	case 'O':
+		RL_d = 0.95;
+		break;
+	case 'T':
+		RL_d = 0.96;
+		break;
+	case 'W':
+		RL_d = 0.97;
+		break;
+	case 'U':
+		RL_d = 1.0;
+		break;
+	}
+	switch (RC)
+	{
+	case 'X':
+		RC_d = 1.0;
+		break;
+	case 'U':
+		RC_d = 0.92;
+		break;
+	case 'R':
+		RC_d = 0.96;
+		break;
+	case 'C':
+		RC_d = 1.0;
+		break;
+	}
+	cout << "E= " << E << " " << E_d << "\nRL= " << RL << " " << RL_d << "\nRC= " << RC <<" "<<RC_d<< endl;
+	TemporalScore = ceil((BaseScore * E_d * RL_d * RC_d) * 10) / 10;
+	cout << "\nTemporalScore= " << TemporalScore << endl;
+	cout << "\nQualityScore= " << TemporalScore << endl;
+	if (TemporalScore == 0)
+	{
+		cout << "\nИнформационный уровень опасности(опасность отсутствует).";
+	}
+	else
+	{
+		if ((TemporalScore >= 0.1) && (TemporalScore <= 3.9))
+		{
+			cout << "\nНизкий уровень опасности.";
+		}
+		else
+		{
+			if ((TemporalScore >= 4.0) && (TemporalScore <= 6.9))
+			{
+				cout << "\nСредний уровень опасности.";
+			}
+			else
+			{
+				if ((TemporalScore >= 7.0) && (TemporalScore <= 8.9))
+				{
+					cout << "\nВысокий уровень опаности.";
+				}
+				else
+				{
+					cout << "\nКритический уровень опасности.";
+				}
+			}
+		}
+	}
+	Contes(AV_d,AC_d,PR_d,UI_d,S_d,C_d,I_d,A_d,E_d,RL_d,RC_d);
+	return 0;
+}
+double Contes(double AV_d, double AC_d, double PR_d, double UI_d, double S_d, double C_d, double I_d, double A_d, double E_d, double RL_d, double RC_d)
+{
+	char MAV, MAC, MPR, MUI, MS, MC, MI, MA, CR, IR, AR;
+	double MAV_d, MAC_d, MPR_d, MUI_d, MS_d, MC_d, MI_d, MA_d, CR_d, IR_d, AR_d,M_ImpactBase,M_Exploitability,M_Impact,EnvironmentalScore;
+	cout << "\n\n\nРасчет контекстных метрик:\nВведите буквенные коды значений через пробел в данном порядке:[MAV MAC MPR MUI MS MC MI MA CR IR AR]\nВвод:";
+	cin>>MAV>>MAC>>MPR>>MUI>>MS>>MC>>MI>>MA>>CR>>IR>>AR;
+	switch (MAV)
+	{
+	case 'X':
+		MAV_d = AV_d;
+		break;
+	case 'N':
+		MAV_d = 0.85;
+		break;
+	case 'A':
+		MAV_d = 0.62;
+		break;
+	case 'L':
+		MAV_d = 0.55;
+		break;
+	case 'P':
+		MAV_d = 0.2;
+		break;
+	}
+	switch (MAC)
+	{
+	case 'X':
+		MAC_d = AC_d;
+		break;
+	case 'L':
+		MAC_d = 0.77;
+		break;
+	case 'H':
+		MAC_d = 0.44;
+		break;
+	}
+	switch (MPR)
+	{
+	case 'X':
+		MPR_d = PR_d;
+		break;
+	case 'N':
+		MPR_d = 0.85;
+		break;
+	case 'L':
+		if ((MS == 'C') || ((MS == 'X') && (S_d == 1)))
+		{
+			MPR_d = 0.68;
+		}
+		else
+		{
+			MPR_d = 0.62;
+		}
+		break;
+	case 'H':
+		
+		if ((MS == 'C') || ((MS == 'X') && (S_d == 1)))
+		{
+			MPR_d = 0.50;
+		}
+		else
+		{
+			MPR_d = 0.27;
+		}
+		break;
+	}
+	switch (MUI)
+	{
+	case 'X':
+		MUI_d = UI_d;
+		break;
+	case 'N':
+		MUI_d = 0.85;
+		break;
+	case 'R':
+		MUI_d = 0.62;
+		break;
+	}
+	switch (MS)
+	{
+	case 'X':
+		MS_d = S_d;
+		break;
+	case 'U':
+		MS_d = 0;
+		break;
+	case 'C':
+		MS_d = 1;
+		break;
+	}
+	switch (MC)
+	{
+	case 'X':
+		MC_d = C_d;
+		break;
+	case 'N':
+		MC_d = 0.0;
+		break;
+	case 'L':
+		MC_d = 0.22;
+		break;
+	case 'H':
+		MC_d = 0.56;
+		break;
+	}
+	switch (MI)
+	{
+	case 'X':
+		MI_d = I_d;
+		break;
+	case 'N':
+		MI_d = 0.0;
+		break;
+	case 'L':
+		MI_d = 0.22;
+		break;
+	case 'H':
+		MI_d = 0.56;
+		break;
+	}
+	switch (MA)
+	{
+	case 'X':
+		MA_d = A_d;
+		break;
+	case 'N':
+		MA_d = 0.0;
+		break;
+	case 'L':
+		MA_d = 0.22;
+		break;
+	case 'H':
+		MA_d = 0.56;
+		break;
+	}
+	switch (CR)
+	{
+	case 'X':
+		CR_d = 1.0;
+		break;
+	case 'N':
+		CR_d = 1.5;
+		break;
+	case 'M':
+		CR_d = 1.0;
+		break;
+	case 'L':
+		CR_d = 0.5;
+		break;
+	}
+	switch (IR)
+	{
+	case 'X':
+		IR_d = 1.0;
+		break;
+	case 'N':
+		IR_d = 1.5;
+		break;
+	case 'M':
+		IR_d = 1.0;
+		break;
+	case 'L':
+		IR_d = 0.5;
+		break;
+	}
+	switch (AR)
+	{
+	case 'X':
+		AR_d = 1.0;
+		break;
+	case 'N':
+		AR_d = 1.5;
+		break;
+	case 'M':
+		AR_d = 1.0;
+		break;
+	case 'L':
+		AR_d = 0.5;
+		break;
+	}
+	cout << "MAV= " << MAV << " " << MAV_d << "\nMAC= " << MAC << " " << MAC_d << "\nMPR= " << MPR << " " << MPR_d << "\nMUI= " << MUI << " " << MUI_d << "\nMS= " << MS << " " << MS_d << "\nC= " << MC << " " << MC_d << "\nMI= " << MI << " " << MI_d << "\nMA= " << MA << " " << MA_d << "\nCR= "<<CR<<" "<<CR_d<< "\nIR= "<<IR<<" "<<IR_d<<"\nAR= "<<AR<<" "<<AR_d<<endl;
+	if ((1 - (1 - MC_d * CR_d) * (1 - MI_d * IR_d) * (1 - MA_d * AR_d)) < 0.915)
+	{
+		M_ImpactBase = 1 - (1 - MC_d * CR_d) * (1 - MI_d * IR_d) * (1 - MA_d * AR_d);
+	}
+	else
+	{
+		M_ImpactBase = 0.915;
+	}
+	M_Exploitability = 8.22 * MAV * MAC * MPR * MUI;
+	if (MS_d == 0)
+	{
+		M_Impact = 6.42 * M_ImpactBase;
+	}
+	else
+	{
+		M_Impact = 7.52 * (M_ImpactBase - 0.029) - 3.25 * pow((M_ImpactBase - 0.02), 15);
+	}
+	if (M_Impact <= 0)
+	{
+		EnvironmentalScore = 0;
+	}
+	else
+	{
+		if (MS_d == 1)
+		{
+			if ((1.08 * (M_Impact + M_Exploitability)) < 10)
+			{
+				EnvironmentalScore = ceil(ceil(1.08 * ((M_Impact + M_Exploitability) * 10) / 10 * E_d * RL_d * RC_d) * 10) / 10;
+			}
+			else
+			{
+				EnvironmentalScore = ceil((ceil(10 * 10) / 10 * E_d * RL_d * RC_d) * 10) / 10;
+			}
+		}
+		else
+		{
+			if ((M_Impact + M_Exploitability) < 10)
+			{
+				EnvironmentalScore = ceil((ceil((M_Impact + M_Exploitability) * 10) / 10 * E_d * RL_d * RC_d) * 10) / 10;
+			}
+			else
+			{
+				EnvironmentalScore = ceil((ceil(10 * 10) / 10 * E_d * RL_d * RC_d) * 10) / 10;
+			}
+		}
+	}
+	cout << "\nEnvironmentalScore= " << EnvironmentalScore<<endl;
+	cout << "\nQualityScore= " << EnvironmentalScore << endl;
+	if (EnvironmentalScore == 0)
+	{
+		cout << "\nИнформационный уровень опасности(опасность отсутствует).";
+	}
+	else
+	{
+		if ((EnvironmentalScore >= 0.1) && (EnvironmentalScore <= 3.9))
+		{
+			cout << "\nНизкий уровень опасности.";
+		}
+		else
+		{
+			if ((EnvironmentalScore >= 4.0) && (EnvironmentalScore <= 6.9))
+			{
+				cout << "\nСредний уровень опасности.";
+			}
+			else
+			{
+				if ((EnvironmentalScore >= 7.0) && (EnvironmentalScore <= 8.9))
+				{
+					cout << "\nВысокий уровень опаности.";
+				}
+				else
+				{
+					cout << "\nКритический уровень опасности.";
+				}
+			}
+		}
+	}
+	cout << endl;
+	return 0;
+}
