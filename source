@@ -1,18 +1,30 @@
 #include <iostream>
+#include <windows.h>
+#include <stdio.h>
 using namespace std;
-double Base();
-double Time(double BaseScore, double AV_d, double AC_d, double PR_d, double UI_d, double S_d, double C_d, double I_d, double A_d);
+HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+double Base(int key);
+double Time(double BaseScore, double AV_d, double AC_d, double PR_d, double UI_d, double S_d, double C_d, double I_d, double A_d,int key);
 double Contes(double AV_d, double AC_d, double PR_d, double UI_d, double S_d, double C_d, double I_d, double A_d, double E_d, double RL_d, double RC_d);
 int main()
 {
 	setlocale(LC_ALL, "rus");
 	int key;
+	cout << "Пермененная для расчета:\n1)BaseScore;\n2)TemporalScore;\n3)EnvironmentalScore;\nЛюбое другое значение-выход из программы.\nВыбор:";
+	cin >> key;
 	cout << "Расчет BaseScore:\n";
-	Base();
+	if ((key == 1)||(key==2)||(key==3))
+	{
+		Base(key);
+	}
+	else
+	{
+		return 0;
+	}
 	system("pause");
 	return 0;
 }
-double Base()
+double Base(int key)
 {
 	char AV, AC, PR, UI, S, C, I, A;
 	double AV_d, AC_d, PR_d, UI_d, S_d, C_d, I_d, A_d,Impact,Exploitability,BaseScore,ImpactBase;
@@ -164,6 +176,52 @@ double Base()
 	}
 	cout << "\nBaseScore= " << BaseScore<<endl;
 	cout << "\nQualityScore= " << BaseScore << endl;
+	for (int i = 1; i <= 100; i++)
+	{
+		if (i == BaseScore * 10)
+		{
+			SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN|FOREGROUND_BLUE|FOREGROUND_INTENSITY|BACKGROUND_BLUE|BACKGROUND_RED|BACKGROUND_GREEN|BACKGROUND_INTENSITY);
+			cout << "|";
+		}
+		else
+		{
+			if (i == 0)
+			{
+				SetConsoleTextAttribute(console,FOREGROUND_INTENSITY |BACKGROUND_INTENSITY);
+				cout << "0";
+			}
+			else
+			{
+				if ((i >= 1) && ((i <= 39)))
+				{
+					SetConsoleTextAttribute(console, FOREGROUND_GREEN| FOREGROUND_INTENSITY |BACKGROUND_GREEN | BACKGROUND_INTENSITY);
+					cout << "0";
+				}
+				else
+				{
+					if ((i >= 40) && (i <= 69))
+					{
+						SetConsoleTextAttribute(console, FOREGROUND_BLUE | FOREGROUND_INTENSITY | BACKGROUND_BLUE| BACKGROUND_INTENSITY);
+						cout << "0";
+					}
+					else
+					{
+						if ((i >= 70) && (i <= 89))
+						{
+							SetConsoleTextAttribute(console,FOREGROUND_RED|FOREGROUND_GREEN|BACKGROUND_GREEN|BACKGROUND_RED);
+							cout << "0";
+						}
+						else
+						{
+							SetConsoleTextAttribute(console, FOREGROUND_RED| FOREGROUND_INTENSITY |BACKGROUND_RED| BACKGROUND_INTENSITY);
+							cout << "0";
+						}
+					}
+				}
+			}
+		}
+	}
+	SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	if (BaseScore == 0)
 	{
 		cout << "\nИнформационный уровень опасности(опасность отсутствует).";
@@ -193,10 +251,13 @@ double Base()
 			}
 		}
 	}
-	Time(BaseScore,AV_d,AC_d,PR_d,UI_d,S_d, C_d, I_d, A_d);
+	if ((key == 2)||(key==3))
+	{
+		Time(BaseScore, AV_d, AC_d, PR_d, UI_d, S_d, C_d, I_d, A_d,key);
+	}
 	return 0;
 }
-double Time(double BaseScore, double AV_d, double AC_d, double PR_d, double UI_d, double S_d, double C_d, double I_d, double A_d)
+double Time(double BaseScore, double AV_d, double AC_d, double PR_d, double UI_d, double S_d, double C_d, double I_d, double A_d,int key)
 {
 	char E, RL, RC;
 	double E_d, RL_d, RC_d,TemporalScore;
@@ -257,6 +318,52 @@ double Time(double BaseScore, double AV_d, double AC_d, double PR_d, double UI_d
 	TemporalScore = ceil((BaseScore * E_d * RL_d * RC_d) * 10) / 10;
 	cout << "\nTemporalScore= " << TemporalScore << endl;
 	cout << "\nQualityScore= " << TemporalScore << endl;
+	for (int i = 1; i <= 100; i++)
+	{
+		if (i == TemporalScore * 10)
+		{
+			SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY | BACKGROUND_BLUE | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_INTENSITY);
+			cout << "|";
+		}
+		else
+		{
+			if (i == 0)
+			{
+				SetConsoleTextAttribute(console, FOREGROUND_INTENSITY | BACKGROUND_INTENSITY);
+				cout << "0";
+			}
+			else
+			{
+				if ((i >= 1) && ((i <= 39)))
+				{
+					SetConsoleTextAttribute(console, FOREGROUND_GREEN | FOREGROUND_INTENSITY | BACKGROUND_GREEN | BACKGROUND_INTENSITY);
+					cout << "0";
+				}
+				else
+				{
+					if ((i >= 40) && (i <= 69))
+					{
+						SetConsoleTextAttribute(console, FOREGROUND_BLUE | FOREGROUND_INTENSITY | BACKGROUND_BLUE | BACKGROUND_INTENSITY);
+						cout << "0";
+					}
+					else
+					{
+						if ((i >= 70) && (i <= 89))
+						{
+							SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN |BACKGROUND_GREEN | BACKGROUND_RED);
+							cout << "0";
+						}
+						else
+						{
+							SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_INTENSITY);
+							cout << "0";
+						}
+					}
+				}
+			}
+		}
+	}
+	SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	if (TemporalScore == 0)
 	{
 		cout << "\nИнформационный уровень опасности(опасность отсутствует).";
@@ -286,7 +393,10 @@ double Time(double BaseScore, double AV_d, double AC_d, double PR_d, double UI_d
 			}
 		}
 	}
-	Contes(AV_d,AC_d,PR_d,UI_d,S_d,C_d,I_d,A_d,E_d,RL_d,RC_d);
+	if (key == 3)
+	{
+		Contes(AV_d, AC_d, PR_d, UI_d, S_d, C_d, I_d, A_d, E_d, RL_d, RC_d);
+	}
 	return 0;
 }
 double Contes(double AV_d, double AC_d, double PR_d, double UI_d, double S_d, double C_d, double I_d, double A_d, double E_d, double RL_d, double RC_d)
@@ -429,7 +539,7 @@ double Contes(double AV_d, double AC_d, double PR_d, double UI_d, double S_d, do
 	case 'X':
 		CR_d = 1.0;
 		break;
-	case 'N':
+	case 'H':
 		CR_d = 1.5;
 		break;
 	case 'M':
@@ -444,7 +554,7 @@ double Contes(double AV_d, double AC_d, double PR_d, double UI_d, double S_d, do
 	case 'X':
 		IR_d = 1.0;
 		break;
-	case 'N':
+	case 'H':
 		IR_d = 1.5;
 		break;
 	case 'M':
@@ -459,7 +569,7 @@ double Contes(double AV_d, double AC_d, double PR_d, double UI_d, double S_d, do
 	case 'X':
 		AR_d = 1.0;
 		break;
-	case 'N':
+	case 'H':
 		AR_d = 1.5;
 		break;
 	case 'M':
@@ -518,6 +628,52 @@ double Contes(double AV_d, double AC_d, double PR_d, double UI_d, double S_d, do
 	}
 	cout << "\nEnvironmentalScore= " << EnvironmentalScore<<endl;
 	cout << "\nQualityScore= " << EnvironmentalScore << endl;
+	for (int i = 1; i <= 100; i++)
+	{
+		if (i == EnvironmentalScore * 10)
+		{
+			SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY | BACKGROUND_BLUE | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_INTENSITY);
+			cout << "|";
+		}
+		else
+		{
+			if (i == 0)
+			{
+				SetConsoleTextAttribute(console, FOREGROUND_INTENSITY | BACKGROUND_INTENSITY);
+				cout << "0";
+			}
+			else
+			{
+				if ((i >= 1) && ((i <= 39)))
+				{
+					SetConsoleTextAttribute(console, FOREGROUND_GREEN | FOREGROUND_INTENSITY | BACKGROUND_GREEN | BACKGROUND_INTENSITY);
+					cout << "0";
+				}
+				else
+				{
+					if ((i >= 40) && (i <= 69))
+					{
+						SetConsoleTextAttribute(console, FOREGROUND_BLUE | FOREGROUND_INTENSITY | BACKGROUND_BLUE | BACKGROUND_INTENSITY);
+						cout << "0";
+					}
+					else
+					{
+						if ((i >= 70) && (i <= 89))
+						{
+							SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN | BACKGROUND_GREEN | BACKGROUND_RED);
+							cout << "0";
+						}
+						else
+						{
+							SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_INTENSITY);
+							cout << "0";
+						}
+					}
+				}
+			}
+		}
+	}
+	SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	if (EnvironmentalScore == 0)
 	{
 		cout << "\nИнформационный уровень опасности(опасность отсутствует).";
