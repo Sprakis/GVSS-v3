@@ -176,7 +176,7 @@ double Base(int key)
 	}
 	cout << "\nBaseScore= " << BaseScore<<endl;
 	cout << "\nQualityScore= " << BaseScore << endl;
-	for (int i = 1; i <= 100; i++)
+	for (int i = 0; i <= 100; i++)
 	{
 		if (i == BaseScore * 10)
 		{
@@ -318,7 +318,7 @@ double Time(double BaseScore, double AV_d, double AC_d, double PR_d, double UI_d
 	TemporalScore = ceil((BaseScore * E_d * RL_d * RC_d) * 10) / 10;
 	cout << "\nTemporalScore= " << TemporalScore << endl;
 	cout << "\nQualityScore= " << TemporalScore << endl;
-	for (int i = 1; i <= 100; i++)
+	for (int i = 0; i <= 100; i++)
 	{
 		if (i == TemporalScore * 10)
 		{
@@ -628,7 +628,7 @@ double Contes(double AV_d, double AC_d, double PR_d, double UI_d, double S_d, do
 	}
 	cout << "\nEnvironmentalScore= " << EnvironmentalScore<<endl;
 	cout << "\nQualityScore= " << EnvironmentalScore << endl;
-	for (int i = 1; i <= 100; i++)
+	for (int i = 0; i <= 100; i++)
 	{
 		if (i == EnvironmentalScore * 10)
 		{
@@ -706,3 +706,6 @@ double Contes(double AV_d, double AC_d, double PR_d, double UI_d, double S_d, do
 	cout << endl;
 	return 0;
 }
+//N L H N U N L H
+//U O U
+//X L N R U X N L X M H
